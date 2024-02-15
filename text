@@ -6,7 +6,6 @@ class HelloWorld {
     public static void main(String[] args) {
         String data = "C5 3E 82 5D 00 00 00 00";
 
-
         final int highestByte   = 7;
         final int lowestByte    = 6;
         final int highestBit    = 5;
@@ -25,7 +24,16 @@ class HelloWorld {
         String highestDeicmalArr[] = highestDecimalData.split("");
         String lowestdeicmalArr[] = lowestDecimalData.split("");
 
-        System.out.println(  String.join(Arrays.copyOfRange(highestDeicmalArr, highestDeicmalArr.length - highestBit - 1, highestDeicmalArr.length)) );
+        String relaventHighestDecimal = String.join("", Arrays.copyOfRange(highestDeicmalArr, highestDeicmalArr.length - highestBit - 1, highestDeicmalArr.length));
+        String relaventLowestDecimal = String.join("", Arrays.copyOfRange(lowestdeicmalArr, lowestdeicmalArr.length - lowestBit - 1, lowestdeicmalArr.length));
+
+        int parsedDecimal = getDecimalNumber(relaventHighestDecimal + relaventLowestDecimal);
+
+        double valueWithStepSize = parsedDecimal * stepSize;
+
+        double finalValue = valueWithStepSize - stepSize;
+
+        System.out.println(   );
 
     }
     

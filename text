@@ -4,74 +4,64 @@ import java.util.*;
 
 class HelloWorld {
     public static void main(String[] args) {
-        String data = "     2)         3.0  Rx         00DD  8  0C 80 00 00 00 00 B0 7D";
-        
-        int msgNumEndIndex = data.indexOf(')') + 1;
-        int typeStartIndex = data.indexOf('R');
-        int idHexStartIndex = typeStartIndex + 2;
-        int idHexEndIndex = idHexStartIndex + 13;
-        int dataLengthCodeStartIndex = idHexEndIndex + 1;
-        int dataLengthCodeEndIndex = dataLengthCodeStartIndex + 3; 
-        int hexDataStartIndex = dataLengthCodeEndIndex + 1;
-        
-        
-    System.out.println("Time: " + data.substring(msgNumEndIndex, typeStartIndex).trim());
-    
-        
-    System.out.println("Id: " + data.substring(idHexStartIndex, idHexEndIndex).trim());    
-        
-    System.out.println("Data Length: " + data.substring(dataLengthCodeStartIndex, dataLengthCodeEndIndex).trim());    
-         
-     System.out.println("HEX: " + data.substring(hexDataStartIndex).trim());    
+        String data = "C5 3E 82 5D 00 00 00 00";
 
-    System.out.println("HEX to Binary: " + hexadecimalToBinary(
-        String.join(
-            "",
-            data.substring(hexDataStartIndex).trim().split(" "))
-        )
-    );
-    
-    System.out.println("Binary to Decimal: " + getDecimalNumber(
-        hexadecimalToBinary(
-            String.join(
-                "",
-                data.substring(hexDataStartIndex).trim().split(" "))
-            )
-        )
-    );
-}
+
+        final int highestByte   = 7;
+        final int lowestByte    = 6;
+        final int highestBit    = 5;
+        final int lowestBit     = 0;
+        final int offset        = 2048;
+        final double stepSize   = 0.5;
+
+        String []dataArr = data.split(" ");
+
+        String highestHexDataByte = dataArr[dataArr.length - highestByte - 1];
+        String lowestHexDataByte = dataArr[dataArr.length - lowestByte - 1];
+
+        String highestDecimalData = hexadecimalToBinary(highestHexDataByte);
+        String lowestDecimalData = hexadecimalToBinary(lowestHexDataByte);
+
+        String highestDeicmalArr[] = highestDecimalData.split("");
+        String lowestdeicmalArr[] = lowestDecimalData.split("");
+
+        System.out.println(  String.join(Arrays.copyOfRange(highestDeicmalArr, highestDeicmalArr.length - highestBit - 1, highestDeicmalArr.length)) );
+
+    }
     
     public static String hexadecimalToBinary(String hexadecimalNumber){
-      String binaryNumber = "";
-      hexadecimalNumber = hexadecimalNumber.toUpperCase();
-      HashMap<Character, String> hm = new HashMap<Character, String>();
-      hm.put('0', "0000");
-      hm.put('1', "0001");
-      hm.put('2', "0010");
-      hm.put('3', "0011");
-      hm.put('4', "0100");
-      hm.put('5', "0101");
-      hm.put('6', "0110");
-      hm.put('7', "0111");
-      hm.put('8', "1000");
-      hm.put('9', "1001");
-      hm.put('A', "1010");
-      hm.put('B', "1011");
-      hm.put('C', "1100");
-      hm.put('D', "1101");
-      hm.put('E', "1110");
-      hm.put('F', "1111");
-      for (int i = 0; i < hexadecimalNumber.length(); i++) {
-         char c = hexadecimalNumber.charAt(i);
-         if (hm.containsKey(c))
-         binaryNumber += hm.get(c);
-         else {
-            binaryNumber = "You have entered an invalid Hexadecimal Number.";
-            return binaryNumber;
-         }
-      }
-      return binaryNumber;
-   }
+        String binaryNumber = "";
+        hexadecimalNumber = hexadecimalNumber.toUpperCase();
+        HashMap<Character, String> hm = new HashMap<Character, String>();
+        hm.put('0', "0000");
+        hm.put('1', "0001");
+        hm.put('2', "0010");
+        hm.put('3', "0011");
+        hm.put('4', "0100");
+        hm.put('5', "0101");
+        hm.put('6', "0110");
+        hm.put('7', "0111");
+        hm.put('8', "1000");
+        hm.put('9', "1001");
+        hm.put('A', "1010");
+        hm.put('B', "1011");
+        hm.put('C', "1100");
+        hm.put('D', "1101");
+        hm.put('E', "1110");
+        hm.put('F', "1111");
+
+        for (int i = 0; i < hexadecimalNumber.length(); i++) {
+            char c = hexadecimalNumber.charAt(i);
+
+            if(!hm.containsKey(c)){
+                throw new Error("You have entered an invalid Hexadecimal Number.");
+            }
+
+            binaryNumber += hm.get(c);
+        }
+
+        return binaryNumber;
+    }
     
     // function for converting binary to decimal number
     public static int getDecimalNumber(String binaryNumbers){
@@ -90,17 +80,4 @@ class HelloWorld {
         }
         return decimalNumber;
     }
-    
-    
 }
-
-
-
-
-
-
-
-
-
-
-

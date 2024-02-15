@@ -32,28 +32,8 @@ public class CANTraceParser {
         }  
     }
 
-    private static  parseCANData(String CANData){
+    private static void parseCANData(String CANData){
         HashSet<String> idsToParse = new HashSet<String>(Arrays.asList("0018", "0F7A", "0B41")); // Set of Id's to parse
-        // Map<String, Object> idsToParse = new HashMap<String, Object>(){{
-        //     put("0018", new HashMap<String, Integer>(){{
-        //         put("HigherByte", 7);
-        //         put("LowerByte", 6);
-        //         put("HigherBit", 5);
-        //         put("LowerBit", 0);
-        //     }});
-        //     put("0F7A", new HashMap<String, Integer>(){{
-        //         put("HigherByte", 7);
-        //         put("LowerByte", 6);
-        //         put("HigherBit", 3);
-        //         put("LowerBit", 0);
-        //     }});
-        //     put("0B41", new HashMap<String, Integer>(){{
-        //         put("HigherByte", 7);
-        //         put("LowerByte", 6);
-        //         put("HigherBit", 3);
-        //         put("LowerBit", 0);
-        //     }});
-        // }};
 
         // Using unique parts of the data frame to extract the requried data
         // Used to extract the Time Offset (ms)
@@ -86,10 +66,14 @@ public class CANTraceParser {
             final int offset        = 2048;
             final double stepSize   = 0.5;
 
+            String []dataBytesArr = dataBytes.split(" ");
+
             
         }
 
-        if(msgId == "0F7A")
+        if(msgId == "0F7A"){
+
+        }
 
         System.out.println("******************");
         System.out.println("Time: " + timeOffset);

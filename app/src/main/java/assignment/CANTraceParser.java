@@ -2,15 +2,13 @@ package assignment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class CANTraceParser {
-    public void ParseCANTraceFile(String trcFileLocToParse) {
+    public CANTrace ParseCANTraceFile(String trcFileLocToParse) {
         try { 
             File fileToParse        = new File(trcFileLocToParse);  // Accessing the file from location submitted by the user         
             Scanner trcFileScanner  = new Scanner(fileToParse);     // Fetching files from the file seelcted by the user
@@ -29,19 +27,19 @@ public class CANTraceParser {
                 // Skiping the loop if null is returned
                 if(parsedCANData == null) continue;
 
-                System.out.println( ( (SingleCANFrameData) parsedCANData ).getMsgId() );
-                
-                break;
+                // Appending parsed data to CANTrace
+                canTrace.appendCanData(parsedCANData);
             } 
 
             trcFileScanner.close();
+            return canTrace;
         } catch (FileNotFoundException e) {
             System.err.println("File not found!");
             e.printStackTrace();
         } catch (SecurityException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } 
+        return null;
     }
 
     // This function parses the CAN Data and returns an Object which may contain SingleCANFrameData | MultipleCANFrameData
@@ -79,9 +77,12 @@ public class CANTraceParser {
             final int offset        = 2048; // Todo: Check offset with prof
             final double stepSize   = 0.5;
 
+            // Calcuulating data from hex based on presets
             double finalValue = calculate(highestByte, lowestByte, highestBit, lowestBit, offset, stepSize, dataBytes);
             
+            // Storing the calculted values
             SingleCANFrameData singleCANFrameData = new SingleCANFrameData(msgId, timeOffset, dataLength, dataBytes, finalValue);
+            
             return singleCANFrameData;
         }
 
@@ -93,9 +94,12 @@ public class CANTraceParser {
             final int offset        = 0; // Todo: Check offset with prof
             final double stepSize   = 0.1;
 
+            // Calcuulating data from hex based on presets
             double finalValue = calculate(highestByte, lowestByte, highestBit, lowestBit, offset, stepSize, dataBytes);
 
+            // Storing the calculted values
             SingleCANFrameData singleCANFrameData = new SingleCANFrameData(msgId, timeOffset, dataLength, dataBytes, finalValue);
+
             return singleCANFrameData;
         }
 
@@ -124,6 +128,7 @@ public class CANTraceParser {
             final int lateralAccelearation_offset        = 0; // Todo: Check offset with prof
             final double lateralAccelearation_stepSize   = 0.1;
 
+            // Calcuulating data from hex based on presets
             double yawRate_finalValue = calculate(
                 yawRate_highestByte, yawRate_lowestByte, yawRate_highestBit, yawRate_lowestBit, yawRate_offset, yawRate_stepSize, dataBytes
             );
@@ -138,9 +143,11 @@ public class CANTraceParser {
                 lateralAccelearation_lowestBit, lateralAccelearation_offset, lateralAccelearation_stepSize, dataBytes
             );
 
+            // Storing the calculted values
             MultipleCANFrameData multipleCANFrameData = new MultipleCANFrameData(
                 msgId, timeOffset, dataLength, dataBytes, yawRate_finalValue, longitudinalAccelaration_finalValue, lateralAccelearation_finalValue
             );
+
             return multipleCANFrameData;
         }
 
@@ -149,24 +156,31 @@ public class CANTraceParser {
 
     // To exctract/calculate the CAN data by its presets
     private double calculate(int highestByte, int lowestByte, int highestBit, int lowestBit, int offset, double stepSize, String dataBytes){
-        String []dataBytesArr = dataBytes.split(" ");
+        String []dataBytesArr = dataBytes.split(" "); // Spliting Hex data by "white spsace"
 
-        String highestHexDataByte = dataBytesArr[dataBytesArr.length - highestByte - 1];
-        String lowestHexDataByte = dataBytesArr[dataBytesArr.length - lowestByte - 1];
+        // Extracting Hex values from databytes
+        String highestHexDataByte   = dataBytesArr[dataBytesArr.length - highestByte - 1];
+        String lowestHexDataByte    = dataBytesArr[dataBytesArr.length - lowestByte - 1];
 
-        String highestDecimalData = hexadecimalToBinary(highestHexDataByte);
-        String lowestDecimalData = hexadecimalToBinary(lowestHexDataByte);
+        // Converting extracted Hex to binary
+        String highestDecimalData   = hexadecimalToBinary(highestHexDataByte);
+        String lowestDecimalData    = hexadecimalToBinary(lowestHexDataByte);
 
-        String highestDeicmalArr[] = highestDecimalData.split("");
-        String lowestdeicmalArr[] = lowestDecimalData.split("");
+        // Splting converted binary values
+        String highestDeicmalArr[]  = highestDecimalData.split("");
+        String lowestdeicmalArr[]   = lowestDecimalData.split("");
 
-        String relaventHighestDecimal = String.join("", Arrays.copyOfRange(highestDeicmalArr, highestDeicmalArr.length - highestBit - 1, highestDeicmalArr.length));
-        String relaventLowestDecimal = String.join("", Arrays.copyOfRange(lowestdeicmalArr, 0, lowestdeicmalArr.length - lowestBit));
+        // Extracting required binary data based on presets
+        String relaventHighestDecimal   = String.join("", Arrays.copyOfRange(highestDeicmalArr, highestDeicmalArr.length - highestBit - 1, highestDeicmalArr.length));
+        String relaventLowestDecimal    = String.join("", Arrays.copyOfRange(lowestdeicmalArr, 0, lowestdeicmalArr.length - lowestBit));
 
+        // Converting extraced binary data into decimal values
         int parsedDecimal = getDecimalNumber(relaventHighestDecimal + relaventLowestDecimal);
 
+        // Multiplying step size
         double valueWithStepSize = parsedDecimal * stepSize;
 
+        // Subtracting the offset and returning the value
         return valueWithStepSize - offset;
     }
 

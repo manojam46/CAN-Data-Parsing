@@ -1,0 +1,5 @@
+1. Open the terminal in the root directory of the project
+2. If you are trying to execute it on Mac / Linux
+    - chmod +x gradlew 
+3. To execute the code run 
+    - .\gradlew run --args="'CAN_TRACE_FILE_LOC'" (Single quotes required)

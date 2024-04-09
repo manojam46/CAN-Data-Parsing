@@ -1,26 +1,29 @@
 package assignment;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.DecimalFormat;
-import java.util.Scanner;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
 public class CANTraceParser {
-    public CANTrace ParseCANTraceFile(String trcFileLocToParse) {
+    public CANTrace ParseCANTraceFile(String fileLocation) {
         try { 
-            File fileToParse        = new File(trcFileLocToParse);  // Accessing the file from location submitted by the user         
-            Scanner trcFileScanner  = new Scanner(fileToParse);     // Fetching files from the file seelcted by the user
-            CANTrace canTrace       = new CANTrace();               // To store all the parsed data
+            // Fetching the file from the user location
+            File fileToParse = new File(fileLocation);               
 
-            while (trcFileScanner.hasNextLine()) {
-                // Fetching the nextline from the .trc file
-                String CANData = trcFileScanner.nextLine();
+            // Accessing the data from the file selected by the user
+            Scanner fileScanner = new Scanner(fileToParse);   
 
-                // Skip parsing If the CAN Data Starts with a ; (comment)'
-                if(CANData.startsWith(";")) continue;
+            // Can trace is used to store all the parsed data
+            CANTrace canTrace = new CANTrace();               
+
+            while(fileScanner.hasNextLine()) {
+                // Obtaining the subsequent line from the.trc file
+                String CANData = fileScanner.nextLine();
+
+                // Do not parse If the first character in the CAN data is a ";"
+                if(CANData.startsWith(";")){
+                    continue;
+                } 
 
                 // Contains SingleCANFrameData|MultipleCANFrameData
                 Object parsedCANData = parseCANData(CANData);
@@ -29,11 +32,13 @@ public class CANTraceParser {
                 if(parsedCANData == null) continue;
 
                 // Appending parsed data to CANTrace
-                canTrace.appendCanData(parsedCANData);
+                canTrace.addNew(parsedCANData);
             } 
 
-            trcFileScanner.close();
+            fileScanner.close();
             return canTrace;
+
+        // Error Handling
         } catch (FileNotFoundException e) {
             System.err.println("File not found!");
             e.printStackTrace();
@@ -43,11 +48,11 @@ public class CANTraceParser {
         return null;
     }
 
-    // This function parses the CAN Data and returns an Object which may contain SingleCANFrameData | MultipleCANFrameData
+    // After analysing the CAN Data, this function produces an Object that might include SingleCANFrameData or MultipleCANFrameData.
     private Object parseCANData(String CANData){
-        HashSet<String> idsToParse = new HashSet<String>(Arrays.asList("0018", "0F7A", "0B41")); // Set of Id's to parse
+        List<String> ids = Arrays.asList("0018", "0F7A", "0B41");
 
-        // Using unique parts of the data frame to extract the requried data
+        // extracting the necessary info from the data frame by using its unique components.
         // Used to extract the Time Offset (ms)
         int msgNumEndIndex = CANData.indexOf(')') + 1;
         int typeStartIndex = CANData.indexOf('R');
@@ -68,92 +73,84 @@ public class CANTraceParser {
         int dataLength      = Integer.parseInt(CANData.substring(dataLengthCodeStartIndex, dataLengthCodeEndIndex).trim());
         String dataBytes    = CANData.substring(hexDataStartIndex).trim();
 
-        if(!idsToParse.contains(msgId)) return null;
+        if(!ids.contains(msgId)){
+            return null;
+        }
 
         if(msgId.equals("0018")){
-            final int highestByte   = 7;
-            final int lowestByte    = 6;
-            final int highestBit    = 5;
-            final int lowestBit     = 0;
+            final int byteHigh   = 7;
+            final int byteLow    = 6;
+            final int bitHigh    = 5;
+            final int bitLow     = 0;
             final double offset     = 2048;
             final double stepSize   = 0.5;
-            final String dataType   = "Steering wheel angle";
+            final String attributeType = "Steering wheel angle";
 
             // Calcuulating data from hex based on presets
-            double finalValue = calculate(highestByte, lowestByte, highestBit, lowestBit, offset, stepSize, dataBytes);
+            double finalValue = extractDataAndComputeResult(byteHigh, byteLow, bitHigh, bitLow, offset, stepSize, dataBytes);
             
             // Storing the calculted values
-            SingleCANFrameData singleCANFrameData = new SingleCANFrameData(msgId, timeOffset, dataLength, dataBytes, finalValue, dataType);
+            SingleCANFrameData singleCANFrameData = new SingleCANFrameData(msgId, timeOffset, dataLength, dataBytes, finalValue, attributeType);
             
             return singleCANFrameData;
         }
 
+        // For Vehicle Speed
         if(msgId.equals("0F7A")){
-            final int highestByte   = 7;
-            final int lowestByte    = 6;
-            final int highestBit    = 3;
-            final int lowestBit     = 0;
+            final int byteHigh   = 7;
+            final int byteLow    = 6;
+            final int bitHigh    = 3;
+            final int bitLow     = 0;
             final double offset     = 0; 
             final double stepSize   = 0.1;
-            final String dataType   = "Displayed vehicle speed";
+            final String attributeType   = "Vehicle Speed";
 
             // Calcuulating data from hex based on presets
-            double finalValue = calculate(highestByte, lowestByte, highestBit, lowestBit, offset, stepSize, dataBytes);
+            double finalValue = extractDataAndComputeResult(byteHigh, byteLow, bitHigh, bitLow, offset, stepSize, dataBytes);
 
             // Storing the calculted values
-            SingleCANFrameData singleCANFrameData = new SingleCANFrameData(msgId, timeOffset, dataLength, dataBytes, finalValue, dataType);
+            SingleCANFrameData singleCANFrameData = new SingleCANFrameData(msgId, timeOffset, dataLength, dataBytes, finalValue, attributeType);
 
             return singleCANFrameData;
         }
 
         if(msgId.equals("0B41")){
             // Vehicle yaw rate
-            final int yawRate_highestByte   = 7;
-            final int yawRate_lowestByte    = 6;
-            final int yawRate_highestBit    = 7;
-            final int yawRate_lowestBit     = 0;
+            final int yawRate_byteHigh   = 7;
+            final int yawRate_byteLow    = 6;
+            final int yawRate_bitHigh    = 7;
+            final int yawRate_bitLow     = 0;
             final double yawRate_offset     = 327.68; 
             final double yawRate_stepSize   = 0.01;
-            final String yawRate_type       = "Vehicle yaw rate";
+            final String yawRate_type       = "Vehicle Yaw Rate";
 
             // Vehicle longitudinal acceleration
-            final int longitudinalAccelaration_highestByte   = 3;
-            final int longitudinalAccelaration_lowestByte    = 3;
-            final int longitudinalAccelaration_highestBit    = 7;
-            final int longitudinalAccelaration_lowestBit     = 0;
+            final int longitudinalAccelaration_byteHigh   = 3;
+            final int longitudinalAccelaration_byteLow    = 3;
+            final int longitudinalAccelaration_bitHigh    = 7;
+            final int longitudinalAccelaration_bitLow     = 0;
             final double longitudinalAccelaration_offset     = 10.24;
             final double longitudinalAccelaration_stepSize   = 0.08;
-            final String longitudinalAccelaration_type       = "Vehicle longitudinal acceleration";
+            final String longitudinalAccelaration_type       = "Vehicle Longitudinal Acceleration";
 
             // Vehicle lateral acceleration
-            final int lateralAccelearation_highestByte   = 2;
-            final int lateralAccelearation_lowestByte    = 2;
-            final int lateralAccelearation_highestBit    = 7;
-            final int lateralAccelearation_lowestBit     = 0;
+            final int lateralAccelearation_byteHigh   = 2;
+            final int lateralAccelearation_byteLow    = 2;
+            final int lateralAccelearation_bitHigh    = 7;
+            final int lateralAccelearation_bitLow     = 0;
             final double lateralAccelearation_offset     = 10.24;
             final double lateralAccelearation_stepSize   = 0.08;
-            final String lateralAccelearation_type       = "Vehicle lateral acceleration";
+            final String lateralAccelearation_type       = "Vehicle Lateral Acceleration";
 
-            // Calcuulating data from hex based on presets
-            double yawRate_finalValue = calculate(
-                yawRate_highestByte, yawRate_lowestByte, yawRate_highestBit, yawRate_lowestBit, yawRate_offset, yawRate_stepSize, dataBytes
-            );
+            // Calculating data from hex based on pre-sets
+            double yawRate_result = extractDataAndComputeResult(yawRate_byteHigh, yawRate_byteLow, yawRate_bitHigh, yawRate_bitLow, yawRate_offset, yawRate_stepSize, dataBytes);
 
-            double longitudinalAccelaration_finalValue = calculate(
-                longitudinalAccelaration_highestByte, longitudinalAccelaration_lowestByte, longitudinalAccelaration_highestBit, 
-                longitudinalAccelaration_lowestBit, longitudinalAccelaration_offset, longitudinalAccelaration_stepSize, dataBytes
-            );
+            double longitudinalAccelaration_result = extractDataAndComputeResult(longitudinalAccelaration_byteHigh, longitudinalAccelaration_byteLow, longitudinalAccelaration_bitHigh, longitudinalAccelaration_bitLow, longitudinalAccelaration_offset, longitudinalAccelaration_stepSize, dataBytes);
 
-            double lateralAccelearation_finalValue = calculate(
-                lateralAccelearation_highestByte, lateralAccelearation_lowestByte, lateralAccelearation_highestBit, 
-                lateralAccelearation_lowestBit, lateralAccelearation_offset, lateralAccelearation_stepSize, dataBytes
-            );
+            double lateralAccelearation_result = extractDataAndComputeResult(lateralAccelearation_byteHigh, lateralAccelearation_byteLow, lateralAccelearation_bitHigh, lateralAccelearation_bitLow, lateralAccelearation_offset, lateralAccelearation_stepSize, dataBytes);
 
             // Storing the calculted values
-            MultipleCANFrameData multipleCANFrameData = new MultipleCANFrameData(
-                msgId, timeOffset, dataLength, dataBytes, yawRate_finalValue, longitudinalAccelaration_finalValue, lateralAccelearation_finalValue,
-                yawRate_type, longitudinalAccelaration_type, lateralAccelearation_type
-            );
+            MultipleCANFrameData multipleCANFrameData = new MultipleCANFrameData(msgId, timeOffset, dataLength, dataBytes, yawRate_result, longitudinalAccelaration_result, lateralAccelearation_result, yawRate_type, longitudinalAccelaration_type, lateralAccelearation_type);
 
             return multipleCANFrameData;
         }
@@ -162,27 +159,25 @@ public class CANTraceParser {
     }
 
     // To exctract/calculate the CAN data by its presets
-    private double calculate(int highestByte, int lowestByte, int highestBit, int lowestBit, double offset, double stepSize, String dataBytes){
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+    private double extractDataAndComputeResult(int byteHigh, int byteLow, int bitHigh, int bitLow, double offset, double stepSize, String dataBytes){
         String []dataBytesArr = dataBytes.split(" "); // Spliting Hex data by "white spsace"
 
-        int highestHexDataByteArrayIndex = dataBytesArr.length - highestByte - 1;
-        int lowestHexDataByteArrayIndex = dataBytesArr.length - lowestByte - 1;
+        int highestHexDataByteArrayIndex = dataBytesArr.length - byteHigh - 1;
+        int lowestHexDataByteArrayIndex = dataBytesArr.length - byteLow - 1;
 
         if(highestHexDataByteArrayIndex == lowestHexDataByteArrayIndex){
             String hexDataByte = dataBytesArr[highestHexDataByteArrayIndex];
-
             String decimalData   = hexadecimalToBinary(hexDataByte);
 
-            String deicmalArr[]  = decimalData.split("");
+            String decimalArray[]  = decimalData.split("");
 
-            String relaventDecimal   = String.join("", Arrays.copyOfRange(deicmalArr, deicmalArr.length - highestBit - 1, deicmalArr.length));
+            String relaventDecimal   = String.join("", Arrays.copyOfRange(decimalArray, decimalArray.length - bitHigh - 1, decimalArray.length));
 
             int parsedDecimal = getDecimalNumber(relaventDecimal);
 
             double valueWithStepSize = parsedDecimal * stepSize;
 
-            return Double.parseDouble(decimalFormat.format(valueWithStepSize - offset));
+            return Double.parseDouble((new DecimalFormat("#.00")).format(valueWithStepSize - offset));
         }
 
         // Extracting Hex values from databytes
@@ -194,12 +189,12 @@ public class CANTraceParser {
         String lowestDecimalData    = hexadecimalToBinary(lowestHexDataByte);
 
         // Splting converted binary values
-        String highestDeicmalArr[]  = highestDecimalData.split("");
-        String lowestdeicmalArr[]   = lowestDecimalData.split("");
+        String highestDecimalArray[]  = highestDecimalData.split("");
+        String lowestdecimalArray[]   = lowestDecimalData.split("");
 
         // Extracting required binary data based on presets
-        String relaventHighestDecimal   = String.join("", Arrays.copyOfRange(highestDeicmalArr, highestDeicmalArr.length - highestBit - 1, highestDeicmalArr.length));
-        String relaventLowestDecimal    = String.join("", Arrays.copyOfRange(lowestdeicmalArr, 0, lowestdeicmalArr.length - lowestBit));
+        String relaventHighestDecimal   = String.join("", Arrays.copyOfRange(highestDecimalArray, highestDecimalArray.length - bitHigh - 1, highestDecimalArray.length));
+        String relaventLowestDecimal    = String.join("", Arrays.copyOfRange(lowestdecimalArray, 0, lowestdecimalArray.length - bitLow));
 
         // Converting extraced binary data into decimal values
         int parsedDecimal = getDecimalNumber(relaventHighestDecimal + relaventLowestDecimal);
@@ -208,7 +203,7 @@ public class CANTraceParser {
         double valueWithStepSize = parsedDecimal * stepSize;
 
         // Subtracting the offset and returning the value
-        return Double.parseDouble(decimalFormat.format(valueWithStepSize - offset));
+        return Double.parseDouble((new DecimalFormat("#.00")).format(valueWithStepSize - offset));
     }
 
     // Function to convert hex to binary (Source: "https://www.geeksforgeeks.org/java-program-to-convert-hexadecimal-to-binary/")

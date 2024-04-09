@@ -1,8 +1,5 @@
 package assignment;
 
-import java.util.LinkedList;
-import java.util.Scanner;
-
 public class CANSimulation {
     @SuppressWarnings("resource")
     public static void main(String args[]) {
@@ -22,6 +19,27 @@ public class CANSimulation {
         GPSTrace gpsTrace = gpsParser.parseGPSTraceFile(gpsLoc);
         
 
-        
+        // for(GPSCoordinate gp: gpsTrace.getGpsCoordinates()){
+        //     System.out.println(gp.getLatitude() + " | " + gp.getLogitude() + " | " + gp.getTimeOffset());
+        // }
+
+        int totalRetrivedData = 0;
+        long simulationStartTime = System.currentTimeMillis();
+
+        while (totalRetrivedData < canTrace.getCANDataTotalLength()) {
+            long currentSimulationTime = System.currentTimeMillis();
+            long timeOffset = currentSimulationTime - simulationStartTime;
+
+            Object data = canTrace.getNextMessageByTimeOffset(timeOffset);
+
+            System.out.println(currentSimulationTime + "-" +simulationStartTime);
+            if(data == null){
+                System.out.println("No Data: " + timeOffset);
+                continue;
+            }
+
+            System.out.println("Data: " + timeOffset);
+            totalRetrivedData++;
+        }
     }
 }

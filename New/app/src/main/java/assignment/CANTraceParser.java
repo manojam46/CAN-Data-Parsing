@@ -5,7 +5,7 @@ import java.text.*;
 import java.util.*;
 
 public class CANTraceParser {
-    public CANTrace ParseCANTraceFile(String fileLocation) {
+    public CANTrace parseCANTraceFile(String fileLocation) {
         try { 
             // Fetching the file from the user location
             File fileToParse = new File(fileLocation);               

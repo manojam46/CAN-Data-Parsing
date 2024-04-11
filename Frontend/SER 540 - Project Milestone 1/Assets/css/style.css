@@ -1,0 +1,106 @@
+.main-container{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+    border: 2px solid white;
+    border-radius: 20px;
+    height: 90vh;
+    width: 90vw;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.container .flex-item{
+    height: 100%;
+    width: 100%;
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 30px;
+    /* border: 2px solid white; */
+}
+
+.container .map-container{
+    width: 180%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .map-container .map{
+    height: 900%;
+    padding: 0
+}
+
+.container .map-container .map img{
+    height: 100%;
+    width: 100%;
+}
+
+.container .map-container .flex-item{
+    margin: 0.5rem;
+}
+
+.container .map-container .map-details{
+    display: flex;
+    flex-direction: row;
+    margin: 1.25rem;
+    padding: 1.25rem;
+    align-items: center;
+    justify-content: flex-start;
+    border: 3px rgb(104, 103, 103) solid;
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+.container .map-container .map-details .data-con .destination{
+    font-size: 1.5rem;
+    background: none;
+}
+
+.container .map-container .map-details .data-con a{
+    background-color: #d6d1d1;
+    color: rgb(32, 32, 32);
+    padding: 1rem 1.5rem;
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    border-radius: 25px;
+}
+
+.container .map-container .map-details .data-con .button-grp{
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+}
+
+.container .map-container .map-details .data-con .button-grp .kilometer,
+.container .map-container .map-details .data-con .button-grp .time{
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+
+.container .map-container .map-details .data-con .button-grp .kilometer i,
+.container .map-container .map-details .data-con .button-grp .time i{
+    font-size: 1.5rem;
+    padding-right: 0.5rem;
+}
+
+.container .map-container .map-details .data-con .button-grp .kilometer p,
+.container .map-container .map-details .data-con .button-grp .time p{ 
+    align-self: center;
+    justify-self: center;
+    font-size: 1.1rem;
+}
+

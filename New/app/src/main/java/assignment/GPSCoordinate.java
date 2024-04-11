@@ -11,6 +11,8 @@ public class GPSCoordinate {
         this.timeOffset = timeOffset;
     }   
 
+    GPSCoordinate(){}
+
     public double getLatitude() {
         return this.latitude;
     }

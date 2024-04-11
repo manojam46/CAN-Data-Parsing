@@ -30,7 +30,7 @@ public class CANTrace {
     }
 
     // Fetches the new message from the List of CAN Data
-    public Object getNextMessage(){
+    public Object getNextMessage(boolean print){
         try{
             if(this.CAN_DATA_ITR == null){
                 this.CAN_DATA_ITR = this.CAN_FRAME_DATA.iterator();
@@ -69,9 +69,11 @@ public class CANTrace {
                                     " (" + multipleCANFrameData.getProcessedData3().get("type") + ")";
             }
     
-            System.out.printf("| %-5s | %-10s | %-10s %n", "ID", "TIME OFFSET", "CALCULATION(S)");
-            System.out.println("-----------------------------------------------------------------");
-            System.out.printf("| %-5s | %-11s | %-15s %n\n\n", id, timeOffset, calculations); 
+            if(print){
+                System.out.printf("| %-5s | %-10s | %-10s %n", "ID", "TIME OFFSET", "CALCULATION(S)");
+                System.out.println("-----------------------------------------------------------------");
+                System.out.printf("| %-5s | %-11s | %-15s %n\n\n", id, timeOffset, calculations); 
+            }
 
             return dataFrame;
         } catch(NoSuchElementException e){

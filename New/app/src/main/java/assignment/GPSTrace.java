@@ -15,7 +15,15 @@ public class GPSTrace {
         this.GPS_COORDIANTES.add(gpsCoordinate);
     }
 
-    public LinkedList<GPSCoordinate> getGpsCoordinates() {
+    public LinkedList<GPSCoordinate> getGPSCoordinates() {
         return this.GPS_COORDIANTES;
+    }
+
+    public GPSCoordinate getGPSCoordinateByTimeOffset(float timeOffset){
+        int index = (int) (timeOffset  / 1000);
+        if(index >= GPS_COORDIANTES.size()){
+            return new GPSCoordinate();
+        }
+        return GPS_COORDIANTES.get(index);
     }
 }

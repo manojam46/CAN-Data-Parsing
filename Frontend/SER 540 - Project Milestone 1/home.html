@@ -6,7 +6,10 @@
     
     <link rel="stylesheet" href="Assets/css/utility.css">
     <link rel="stylesheet" href="Assets/css/style.css">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.cdnfonts.com/css/seven-segment" rel="stylesheet">
+
     <title>HMI Dashboard</title>
 </head>
 <body>
@@ -34,15 +37,46 @@
                 </div>
             </div>
             <div class="flex-item details-container">
-                <div class="cont-header"></div>
-                <div class="cont-details"></div>
-                <div class="cont-battery"></div>
-                <div class="cont-drivingmode"></div>
-            </div>
-            <div class="flex-item steering-container">
-                <div class="header-container"></div>
-                <div class="steering"></div>
-                <div class="option-container"></div>
+                <div class="cont-header">
+                    <div class="yaw-rate">
+                        <p>YAW RATE</p>
+                        <p class="value">2.4</p>
+                    </div>
+
+                    <div class="lateral-acc">
+                        <p>LATERAL ACC</p>
+                        <p class="value">43</p>
+                    </div>
+
+                    <div class="longi-acc">
+                        <p>LONGITUDINAL ACC</p>
+                        <p class="value">32</p>
+                    </div>
+                </div>
+
+                <div class="steering-wheel">
+                        <div class="speedo">
+                            <p>85</p>
+                            <p>km/h</p>
+                        </div>
+    
+                        <div class="steering-wheel-angle">
+                            <p>-2</p>
+                            <p>DEG</p>
+                        </div>
+                    <img src="Assets/images/Steering.png" alt="">
+                </div>
+
+                <div class="cont-GPS">
+                    <div class="GPS-lat">
+                        <p>LATITUDE DEGREE</p>
+                        <p class="value">79.850290193</p>
+                    </div>
+                    <div class="GPS-long">
+                        <p>LONGITUDE DEGREE</p>
+                        <p class="value">78.939490954</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

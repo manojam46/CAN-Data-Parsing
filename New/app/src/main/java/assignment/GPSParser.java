@@ -40,6 +40,7 @@ public class GPSParser {
         return null;
     } 
 
+    // Extracting GPS coordinates and return GPSCoordinate instance
     private GPSCoordinate extractGPSCordinates(String GPSData, double timeOffset){
         String[] parsedGPSData = GPSData.split(", ");
 

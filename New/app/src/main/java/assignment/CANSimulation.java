@@ -6,21 +6,22 @@ public class CANSimulation {
     protected static CANTrace CAN_TRACE;
     protected static GPSTrace GPS_TRACE;
 
-    public static void main(String argss[]) {
+    public static void main(String args[]) {
         try{
-            // Checking if the .trc file location has been submitted
-            // if(args.length < 2){
-            //     throw new Error("File location(s) cannot be empty");
-            // }
-    
+            
             // String[] args = {
             //     "/Users/keer/Documents/Assignments/SER 540/CAN-Data-Parsing/18 CANmessages.trc", 
             //     "/Users/keer/Documents/Assignments/SER 540/CAN-Data-Parsing/GPStrace.txt"
             // };
-            String[] args = {
-                "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\18 CANmessages.trc", 
-                "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\GPStrace.txt"
-            };
+            // String[] args = {
+            //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\18 CANmessages.trc", 
+            //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\GPStrace.txt"
+            // };
+
+            // Checking if the .trc file location has been submitted
+            if(args.length < 2){
+                throw new Error("File location(s) cannot be empty");
+            }
     
             String fileLoc = args[0];
             String gpsLoc = args[1];
@@ -28,7 +29,8 @@ public class CANSimulation {
             CAN_TRACE = (new CANTraceParser()).parseCANTraceFile(fileLoc);
             GPS_TRACE = (new GPSParser()).parseGPSTraceFile(gpsLoc);
             
-            startSimulation();
+            SimulationGUI.startHttpServer();
+            SimulationGUI.startSocket();
         } catch( Exception e ){
             e.printStackTrace();
         }

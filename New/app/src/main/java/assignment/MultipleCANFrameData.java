@@ -10,6 +10,7 @@ public class MultipleCANFrameData extends CANFrame {
     private double PROCESSED_DATA_3;
     private String PROCESSED_DATA_3_TYPE;
 
+    // Default constuctor to hold all the values
     public MultipleCANFrameData(String msgId, float timeOffset, int dataLength, 
         String dataBytes, double processedData1, double processedData2, double processedData3,
         String processedData1Type, String processedData2Type, String processedData3Type
@@ -23,6 +24,7 @@ public class MultipleCANFrameData extends CANFrame {
         this.PROCESSED_DATA_3_TYPE  = processedData3Type;
     }
 
+    // Return processed data 1 with a map of value and type
     public HashMap<String, String> getProcessedData1() {
         String data = String.valueOf(this.PROCESSED_DATA_1);
         String type = this.PROCESSED_DATA_1_TYPE;
@@ -32,6 +34,7 @@ public class MultipleCANFrameData extends CANFrame {
         }}; 
     }
 
+    // Return processed data 2 with a map of value and type
     public HashMap<String, String> getProcessedData2(){
         String data = String.valueOf(this.PROCESSED_DATA_2);
         String type = this.PROCESSED_DATA_2_TYPE;
@@ -41,6 +44,7 @@ public class MultipleCANFrameData extends CANFrame {
         }}; 
     }
 
+    // Return processed data 3 with a map of value and type
     public HashMap<String, String> getProcessedData3(){
         String data = String.valueOf(this.PROCESSED_DATA_3);
         String type = this.PROCESSED_DATA_3_TYPE;

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+
+</head>
+<body>
+    <div id="map" style="height: 90vh;"></div>
+    
+</body>
+<script>
+            var ws = new WebSocket("ws://localhost:" + 56968);
+            var map = L.map('map').setView([0, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        function mapGPSCoordinates(lat, long) {
+            var polyline = L.polyline([[lat, long]], { color: '#3388ff', stroke: true }).addTo(map);
+            map.fitBounds(L.polyline([[lat, long]], { color: 'red' }).addTo(map).getBounds());
+        }
+
+    function serializeData(newData, oldData){
+        return (newData === "...")? oldData : newData;
+    }
+
+        ws.onmessage = function(event){
+            const data = event.data;
+
+            const processedData = data.split('~');
+
+            processedData[6] = parseFloat(serializeData(processedData[6], "..."))
+
+            processedData[7] = parseFloat(serializeData(processedData[7], "..."))
+
+            // lat.innerText = processedData[6]
+
+            // long.innerText = processedData[7]
+
+            mapGPSCoordinates(processedData[6], processedData[7])
+
+            // console.log(processedData);
+        }
+        
+</script>
+</html>

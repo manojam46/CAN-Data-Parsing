@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link rel="stylesheet" href="Assets/css/utility.css">
     <link rel="stylesheet" href="Assets/css/style.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.cdnfonts.com/css/seven-segment" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+
     <title>HMI Dashboard</title>
 </head>
+
 <body>
     <div class="main-container">
         <div class="container">
             <div class="flex-item map-container">
                 <div class="flex-item map">
-                    <img src="Assets/images/GPS-image.png" alt="Map for Navigation">
+                    <!-- <img src="Assets/images/GPS-image.png" alt="Map for Navigation"> -->
+                    <div id="map" style="height: 100%;"></div>
                 </div>
                 <div class="flex-item map-details">
                     <div class="data-con">
@@ -33,7 +42,7 @@
                             </div>
                         </div>
                     </div>
-                        <a class="button dir-button" href="#">Start</a>
+                    <a class="button dir-button" href="#">Start</a>
                 </div>
             </div>
             <div class="flex-item details-container">
@@ -55,15 +64,15 @@
                 </div>
 
                 <div class="steering-wheel">
-                        <div class="speedo">
-                            <p>85</p>
-                            <p>km/h</p>
-                        </div>
-    
-                        <div class="steering-wheel-angle">
-                            <p>-2</p>
-                            <p>DEG</p>
-                        </div>
+                    <div class="speedo">
+                        <p>85</p>
+                        <p>km/h</p>
+                    </div>
+
+                    <div class="steering-wheel-angle">
+                        <p>-2</p>
+                        <p>DEG</p>
+                    </div>
                     <img src="Assets/images/Steering.png" alt="">
                 </div>
 
@@ -81,4 +90,74 @@
         </div>
     </div>
 </body>
+<script>
+    var map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    // Define coordinates for the path
+    var coordinates = [
+        [52.721103, 13.223500],
+        [52.721170, 13.223778],
+        [52.721235, 13.224058],
+        [52.721302, 13.224340],
+        [52.721368, 13.224623],
+        [52.721437, 13.224910],
+        [52.721505, 13.225198],
+        [52.721573, 13.225478],
+        [52.721639, 13.225752],
+        [52.721705, 13.226025],
+        [52.721772, 13.226307],
+        [52.721842, 13.226593],
+        [52.721918, 13.226883],
+        [52.722007, 13.227160],
+        [52.722113, 13.227414],
+        [52.722242, 13.227628],
+        [52.722390, 13.227803],
+        [52.722552, 13.227933],
+        [52.722722, 13.228020],
+        [52.722900, 13.228053],
+        [52.723078, 13.228037],
+        [52.723252, 13.227980],
+        [52.723422, 13.227892],
+        [52.723585, 13.227787],
+        [52.723745, 13.227680],
+        [52.723895, 13.227580],
+        [52.724025, 13.227495],
+        [52.724135, 13.227423],
+        [52.724225, 13.227375],
+        [52.724298, 13.227362],
+        [52.724358, 13.227377],
+        [52.724417, 13.227387],
+        [52.724470, 13.227372],
+        [52.724517, 13.227328],
+        [52.724553, 13.227262],
+        [52.724570, 13.227171],
+        [52.724565, 13.227075],
+        [52.724532, 13.226988],
+        [52.724478, 13.226932],
+        [52.724415, 13.226918],
+        [52.724352, 13.226948]
+    ];
+
+    function test(cord){
+        var polyline = L.polyline(cord, { color: 'red' }).addTo(map);
+    
+        map.fitBounds(polyline.getBounds());
+    }
+
+    i = 1;
+
+    function send(){
+        console.log([ coordinates.slice(0, i) ]);
+        test([ coordinates.slice(0, i) ]);
+        i++
+    }
+
+
+
+</script>
+
 </html>

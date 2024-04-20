@@ -279,6 +279,9 @@
     time = document.getElementById("time"),
     speed2 = document.getElementById("speed2");
 
+    let connectionPort;
+    const coordinates = [];
+
     var prevGPS = [0.1, 0.1].toString();
 
     function serializeData(newData, oldData){
@@ -290,7 +293,9 @@
             return;
         }
 
-        var polyline = L.polyline([[lat, long]], { color: 'red' }).addTo(map);
+        coordinates.push([lat, long]);
+
+        var polyline = L.polyline(coordinates, { color: 'red' }).addTo(map);
         map.fitBounds(polyline.getBounds());
         prevGPS = [lat, long].toString();
     }
@@ -304,11 +309,12 @@
 
 
         try{
-            var connectionPort = ( prompt("Enter the PORT no to connect!") );
+            connectionPort = ( prompt("Enter the PORT no to connect!") );
             var ws = new WebSocket("ws://localhost:" + connectionPort);
 
             ws.onerror = function(event){
-                alert("Connection failed! Please check and try again!");
+                alert("Connection failed! Trying to reconnect!");
+                ws = new WebSocket("ws://localhost:" + connectionPort);
             }
 
             document.getElementById("startStop").addEventListener("click", () => {
@@ -334,7 +340,7 @@
                 steerAngl.innerText = processedData[2];
 
                 if(processedData[2] !== "..."){
-                    steer.style.transform = `rotate(${(processedData[2] < 0)? (360 - processedData[2]) : processedData[2]}deg)`;
+                    steer.style.transform = `rotate(${processedData[2]}deg)`;
                 }
 
                 yaw.innerText = serializeData(processedData[3], yaw.innerText)

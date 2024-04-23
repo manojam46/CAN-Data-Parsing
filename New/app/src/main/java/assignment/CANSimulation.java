@@ -6,17 +6,17 @@ public class CANSimulation {
     protected static CANTrace CAN_TRACE;
     protected static GPSTrace GPS_TRACE;
 
-    public static void main(String args[]) {
+    public static void main(String argss[]) {
         try{
             
             // String[] args = {
             //     "/Users/keer/Documents/Assignments/SER 540/CAN-Data-Parsing/18 CANmessages.trc", 
             //     "/Users/keer/Documents/Assignments/SER 540/CAN-Data-Parsing/GPStrace.txt"
             // };
-            // String[] args = {
-            //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\18 CANmessages.trc", 
-            //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\GPStrace.txt"
-            // };
+            String[] args = {
+                "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\18 CANmessages.trc", 
+                "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\GPStrace.txt"
+            };
 
             // Checking if the .trc file location has been submitted
             if(args.length < 2){

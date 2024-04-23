@@ -13,10 +13,15 @@ public class CANSimulation {
             //     "/Users/keer/Documents/Assignments/SER 540/CAN-Data-Parsing/18 CANmessages.trc", 
             //     "/Users/keer/Documents/Assignments/SER 540/CAN-Data-Parsing/GPStrace.txt"
             // };
+
             String[] args = {
-                "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\18 CANmessages.trc", 
-                "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\GPStrace.txt"
+                "/Users/manoj/Desktop/Assignment/Sem 1/Internet Embeded System/CAN-Data-Parsing/18 CANmessages.trc", 
+                "/Users/manoj/Desktop/Assignment/Sem 1/Internet Embeded System/CAN-Data-Parsing/GPStrace.txt"
             };
+            // String[] args = {
+            //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\18 CANmessages.trc", 
+            //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\GPStrace.txt"
+            // };
 
             // Checking if the .trc file location has been submitted
             if(args.length < 2){

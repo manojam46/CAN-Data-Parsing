@@ -6,15 +6,15 @@ import java.util.*;
 
 
 public class SimulationGUI {
-    private static int WEB_SERVER_PORT = -1;
-    private static int SOCKET_PORT = 8557;
+    private static int WEB_SERVER_PORT = 8080;
+    private static int SOCKET_PORT = 8081;
     private static SocketHandler SOCKET_SERVER;
 
     // Starts up the HTTP server
     public static void startHttpServer(){
         try {
             // Passing 0 will open up any open port
-            HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress(WEB_SERVER_PORT), 0);
 
             // On call for "/" will execute HttpServerHandler
             server.createContext("/", new HttpServerHandler());

@@ -6,7 +6,7 @@ public class CANSimulation {
     protected static CANTrace CAN_TRACE;
     protected static GPSTrace GPS_TRACE;
 
-    public static void main(String argss[]) {
+    public static void main(String args[]) {
         try{
             
             // String[] args = {
@@ -14,10 +14,15 @@ public class CANSimulation {
             //     "/Users/keer/Documents/Assignments/SER 540/CAN-Data-Parsing/GPStrace.txt"
             // };
 
-            String[] args = {
-                "/Users/manoj/Desktop/Assignment/Sem 1/Internet Embeded System/CAN-Data-Parsing/18 CANmessages.trc", 
-                "/Users/manoj/Desktop/Assignment/Sem 1/Internet Embeded System/CAN-Data-Parsing/GPStrace.txt"
-            };
+            // String[] args = {
+            //     "/Users/manoj/Desktop/Assignment/Sem 1/Internet Embeded System/CAN-Data-Parsing/18 CANmessages.trc", 
+            //     "/Users/manoj/Desktop/Assignment/Sem 1/Internet Embeded System/CAN-Data-Parsing/GPStrace.txt"
+            // };
+
+            // String[] args = {
+            //     "/app/18 CANmessages.trc", 
+            //     "/app/GPStrace.txt"
+            // };
             // String[] args = {
             //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\18 CANmessages.trc", 
             //     "C:\\Users\\Manoj A M\\Desktop\\Assignment\\SEM 1\\Internet Embeded System\\Assignment 1\\GPStrace.txt"

@@ -1,0 +1,9 @@
+version: '3.8'
+name: 'ser540'
+
+services:
+  can_simulator:
+    build: .
+    ports:
+      - 8080:8080
+      - 8081:8081
